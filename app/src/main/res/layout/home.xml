@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<it.mdev.sharedservices.design.DashboardLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1">
+
+    <Button
+        style="@style/DashButton"
+        android:id="@+id/Car_btn"
+        android:drawableTop="@mipmap/ic_launcher"
+        android:text="@string/car" />
+
+    <Button
+        style="@style/DashButton"
+        android:id="@+id/Download_btn"
+        android:drawableTop="@mipmap/ic_launcher"
+        android:text="@string/download" />
+
+    <Button
+        style="@style/DashButton"
+        android:id="@+id/Event_btn"
+        android:drawableTop="@mipmap/ic_launcher"
+        android:text="@string/event" />
+
+    <Button
+        style="@style/DashButton"
+        android:id="@+id/Paper_btn"
+        android:drawableTop="@mipmap/ic_launcher"
+        android:text="@string/paper" />
+</it.mdev.sharedservices.design.DashboardLayout>
