@@ -34,7 +34,7 @@
                     android:id="@+id/Fname_etxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
+                    android:inputType="textCapSentences"
                     android:hint="@string/fname" />
             </android.support.design.widget.TextInputLayout>
 
@@ -46,7 +46,7 @@
                     android:id="@+id/Lname_etxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
+                    android:inputType="textCapWords|textCapSentences"
                     android:hint="@string/lname" />
             </android.support.design.widget.TextInputLayout>
 

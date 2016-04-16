@@ -201,7 +201,6 @@ public class SignUp extends Fragment {
             }
         });
 
-
         SignUp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

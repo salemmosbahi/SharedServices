@@ -3,7 +3,10 @@ package it.mdev.sharedservices;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,8 +35,6 @@ import it.mdev.sharedservices.activity.Settings;
 import it.mdev.sharedservices.design.FragmentDrawer;
 import it.mdev.sharedservices.util.Controllers;
 
-import it.mdev.sharedservices.design.FragmentDrawer;
-
 public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
     private SharedPreferences pref;
     Controllers conf = new Controllers();
@@ -48,6 +49,7 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
 
         pref = getSharedPreferences(conf.app, Context.MODE_PRIVATE);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
@@ -65,13 +67,7 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
             im.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
             rl.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.container_body, new Profile());
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                    getSupportActionBar().setTitle(getString(R.string.profile));
-
+                    displayView(5);
                 }
             });
             rl.addView(vi);
@@ -81,18 +77,20 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_notify);
+        menuItem.setVisible(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        /*if(id == R.id.action_notify){
-            Toast.makeText(getApplicationContext(), "Search action is selected!", Toast.LENGTH_SHORT).show();
+        if(id == R.id.action_notify){
+            Toast.makeText(getApplicationContext(), "xxx", Toast.LENGTH_SHORT).show();
             return true;
-        }*/
+        }
         if (id == R.id.action_settings) {
-            displayView(5);
+            displayView(6);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -127,6 +125,10 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
                 title = getString(R.string.paper);
                 break;
             case 5:
+                fragment = new Profile();
+                title = getString(R.string.profile);
+                break;
+            case 6:
                 fragment = new Settings();
                 title = getString(R.string.settings);
                 break;

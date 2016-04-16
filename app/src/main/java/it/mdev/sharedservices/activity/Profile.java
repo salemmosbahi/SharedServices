@@ -2,12 +2,14 @@ package it.mdev.sharedservices.activity;
 
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +74,7 @@ public class Profile extends Fragment {
         Refuse_btn = (Button) v.findViewById(R.id.Refuse_btn);
         Accept_btn = (Button) v.findViewById(R.id.Accept_btn);
 
-        LayerDrawable stars = (LayerDrawable) Point_rb.getProgressDrawable();
+        LayerDrawable stars = (LayerDrawable) DrawableCompat.unwrap(Point_rb.getProgressDrawable());
         stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
@@ -79,7 +82,7 @@ public class Profile extends Fragment {
         Logout_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if(conf.NetworkIsAvailable(getActivity())){
-                    //logoutFunct();
+                    logoutFunct();
                 }else{
                     Toast.makeText(getActivity(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
                 }
@@ -134,6 +137,39 @@ public class Profile extends Fragment {
         } else {
             Logout_btn.setVisibility(View.GONE);
             Toast.makeText(getActivity(), R.string.serverunvalid, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void logoutFunct() {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair(conf.tag_token, pref.getString(conf.tag_token, "")));
+        JSONObject json = sr.getJson(conf.url_logout, params);
+        if(json != null){
+            try{
+                if(json.getBoolean("res")){
+                    SharedPreferences.Editor edit = pref.edit();
+                    edit.putString(conf.tag_token, "");
+                    edit.putString(conf.tag_username, "");
+                    edit.putString(conf.tag_country, "");
+                    edit.putString(conf.tag_city, "");
+                    edit.putString(conf.tag_picture, "");
+                    edit.commit();
+
+                    RelativeLayout rl = (RelativeLayout) getActivity().findViewById(R.id.nav_header_container);
+                    LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View vi = inflater.inflate(R.layout.toolnav_drawer, null);
+                    TextView tv = (TextView) vi.findViewById(R.id.usernameTool_txt);
+                    tv.setText("");
+                    rl.addView(vi);
+
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_body, new Home());
+                    ft.commit();
+                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
+                }
+            }catch(JSONException e){
+                e.printStackTrace();
+            }
         }
     }
 

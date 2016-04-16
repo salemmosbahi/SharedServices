@@ -11,17 +11,21 @@ public class Controllers {
     public static final String app = "AppSharedServices";
     public static final String res = "res";
     public static final String response = "response";
+    public static final String data = "data";
 
     //public static final String url = "http://10.0.2.2:4000";
-    public static final String url = "http://192.168.1.3:4000";
+    public static final String url = "http://192.168.1.5:4000";
     public static final String url_getAllCountry = url + "/getAllCountry";
     public static final String url_getAllCity = url + "/getAllCity";
     public static final String url_login = url + "/login";
+    public static final String url_logout = url + "/logout";
     public static final String url_signup = url + "/signup";
     public static final String url_profile = url + "/profile";
-
+    public static final String url_getDownloadEnd = url + "/getDownloadEnd";
+    public static final String url_addDownload = url + "/addDownload";
 
     public static final String tag_key = "key";
+    public static final String tag_id = "_id";
     public static final String tag_token = "token";
     public static final String tag_username = "username";
     public static final String tag_name = "name";
@@ -37,7 +41,9 @@ public class Controllers {
     public static final String tag_phone = "phone";
     public static final String tag_driver = "driver";
     public static final String tag_pt = "pt";
-    public static final String tag_ptt = "ptt";
+    public static final String tag_size = "size";
+    public static final String tag_date = "date";
+    public static final String tag_status = "status";
 
     public boolean NetworkIsAvailable(Context cx) {
         ConnectivityManager manager = (ConnectivityManager) cx.getSystemService(Context.CONNECTIVITY_SERVICE);
