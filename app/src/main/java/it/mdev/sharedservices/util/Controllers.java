@@ -14,7 +14,7 @@ public class Controllers {
     public static final String data = "data";
 
     //public static final String url = "http://10.0.2.2:4000";
-    public static final String url = "http://192.168.1.5:4000";
+    public static final String url = "http://192.168.1.2:4000";
     public static final String url_getAllCountry = url + "/getAllCountry";
     public static final String url_getAllCity = url + "/getAllCity";
     public static final String url_login = url + "/login";
@@ -22,6 +22,7 @@ public class Controllers {
     public static final String url_signup = url + "/signup";
     public static final String url_profile = url + "/profile";
     public static final String url_getDownloadEnd = url + "/getDownloadEnd";
+    public static final String url_getDownload = url + "/getDownload";
     public static final String url_addDownload = url + "/addDownload";
 
     public static final String tag_key = "key";

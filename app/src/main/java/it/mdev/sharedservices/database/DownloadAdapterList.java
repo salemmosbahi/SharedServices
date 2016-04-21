@@ -63,9 +63,9 @@ public class DownloadAdapterList extends BaseAdapter {
         }
         holder.Name_txt.setText(data.get(position).getName());
         if (data.get(position).isStatus()) {
-            holder.Status_txt.setText("Download complete");
+            holder.Status_txt.setText(R.string.download_complete);
         } else {
-            holder.Status_txt.setText("Download pending");
+            holder.Status_txt.setText(R.string.download_pending);
         }
         holder.Size_txt.setText(data.get(position).getSize() + " Go");
         holder.Date_txt.setText(data.get(position).getDate());

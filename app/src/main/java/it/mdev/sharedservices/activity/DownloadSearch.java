@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -28,7 +31,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import it.mdev.sharedservices.Main;
 import it.mdev.sharedservices.R;
+import it.mdev.sharedservices.database.DownloadAdapterList;
+import it.mdev.sharedservices.database.DownloadDB;
 import it.mdev.sharedservices.util.Calculator;
 import it.mdev.sharedservices.util.Controllers;
 import it.mdev.sharedservices.util.ServerRequest;
@@ -48,11 +54,15 @@ public class DownloadSearch extends Fragment {
     private TextView Date_txt;
     private SwitchCompat Download_swt;
     private Button Search_btn;
+    private ListView lv;
 
     private ArrayList<String> CitysList;
     private ArrayAdapter<String> cityAdapter;
     private JSONArray citys = null;
     private int year, month, day;
+
+    ArrayList<DownloadDB> DownloadDBList;
+    JSONArray dataJsonArray = null;
 
     public DownloadSearch() {}
 
@@ -70,6 +80,7 @@ public class DownloadSearch extends Fragment {
         Date_txt = (TextView) v.findViewById(R.id.Date_txt);
         Download_swt = (SwitchCompat) v.findViewById(R.id.Download_swt);
         Search_btn = (Button) v.findViewById(R.id.Search_btn);
+        lv = (ListView) v.findViewById(R.id.Download_lv);
 
         Download_swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
@@ -118,11 +129,47 @@ public class DownloadSearch extends Fragment {
 
         Search_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
+                if (conf.NetworkIsAvailable(getActivity())) {
+                    searchForm();
+                } else {
+                    Toast.makeText(getActivity(),R.string.networkunvalid,Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         return v;
+    }
+
+    private void searchForm() {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair(conf.tag_name, Name_etxt.getText().toString()));
+        params.add(new BasicNameValuePair(conf.tag_date, Date_txt.getText().toString()));
+        params.add(new BasicNameValuePair(conf.tag_country, pref.getString(conf.tag_country, "")));
+        params.add(new BasicNameValuePair(conf.tag_city, City_sp.getSelectedItem().toString()));
+        params.add(new BasicNameValuePair(conf.tag_status, Download_swt.getText().toString()));
+        DownloadDBList = new ArrayList<>();
+        JSONObject json = sr.getJson(conf.url_getDownload, params);
+        if(json != null){
+            try{
+                if(json.getBoolean(conf.res)) {
+                    dataJsonArray = json.getJSONArray(conf.data);
+                    for (int i = 0; i < dataJsonArray.length(); i++) {
+                        JSONObject c = dataJsonArray.getJSONObject(i);
+                        String id = c.getString(conf.tag_id);
+                        String name = c.getString(conf.tag_name);
+                        int size = c.getInt(conf.tag_size);
+                        String date = c.getString(conf.tag_date);
+                        boolean status = c.getBoolean(conf.tag_status);
+                        DownloadDB rec = new DownloadDB(id, name, date, size, status);
+                        DownloadDBList.add(rec);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        DownloadAdapterList adapter = new DownloadAdapterList(getActivity(), DownloadDBList, DownloadSearch.this);
+        lv.setAdapter(adapter);
     }
 
     DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {

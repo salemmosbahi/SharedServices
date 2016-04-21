@@ -172,7 +172,7 @@ public class SignUp extends Fragment {
                 if (jsonx != null) {
                     try {
                         if (jsonx.getBoolean(conf.res)) {
-                            citys = jsonx.getJSONArray("data");
+                            citys = jsonx.getJSONArray(conf.data);
                             for (int i = 0; i < citys.length(); i++) {
                                 JSONObject t = citys.getJSONObject(i);
                                 CitysList.add(t.getString(conf.tag_name));
