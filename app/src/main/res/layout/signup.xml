@@ -24,7 +24,7 @@
                 app:civ_border_width="2dp"
                 app:civ_border_color="@color/red"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_profile_r"/>
+                android:src="@drawable/ic_profile_r"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/Fname_input"

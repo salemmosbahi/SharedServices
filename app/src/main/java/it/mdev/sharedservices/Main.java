@@ -1,7 +1,6 @@
 package it.mdev.sharedservices;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +23,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import it.mdev.sharedservices.activity.BoxNotify;
 import it.mdev.sharedservices.activity.Car;
 import it.mdev.sharedservices.activity.Download;
 import it.mdev.sharedservices.activity.Event;
@@ -31,21 +42,31 @@ import it.mdev.sharedservices.activity.Home;
 import it.mdev.sharedservices.activity.Login;
 import it.mdev.sharedservices.activity.Paper;
 import it.mdev.sharedservices.activity.Profile;
-import it.mdev.sharedservices.activity.Settings;
+import it.mdev.sharedservices.activity.About;
 import it.mdev.sharedservices.design.FragmentDrawer;
 import it.mdev.sharedservices.util.Controllers;
+import it.mdev.sharedservices.util.ServerRequest;
+import it.mdev.sharedservices.util.SocketIO;
 
 public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
     private SharedPreferences pref;
     Controllers conf = new Controllers();
+    ServerRequest sr = new ServerRequest();
+    Socket socket = SocketIO.getInstance();
 
     public Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
+
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        /*if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }*/
 
         pref = getSharedPreferences(conf.app, Context.MODE_PRIVATE);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,6 +77,7 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
         displayView(0);
+        doIncrease(0);
         if(!pref.getString(conf.tag_token, "").equals("")){
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.nav_header_container);
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,25 +93,117 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
                 }
             });
             rl.addView(vi);
+            if (conf.NetworkIsAvailable(this)) {
+                getCount(pref.getString(conf.tag_token, ""));
+            } else {
+                Toast.makeText(this, R.string.networkunvalid, Toast.LENGTH_SHORT).show();
+            }
+            socket.connect();
+            socket.on(conf.io_count, handleIncomingCount); //listen in count notify
         }
     }
 
-    @Override
+    private Emitter.Listener handleIncomingCount = new Emitter.Listener(){
+        public void call(final Object... args){
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    final String tokenMain, token, type;
+                    try {
+                        type = data.getString(conf.tag_type);
+                        tokenMain = data.getString(conf.tag_tokenMain);
+                        token = data.getString(conf.tag_token);
+                        if (type.equals("token")) {
+                            if (tokenMain.equals(pref.getString(conf.tag_token, "")) || token.equals(pref.getString(conf.tag_token, ""))) {
+                                if (conf.NetworkIsAvailable(getApplication())) {
+                                    getCount(pref.getString(conf.tag_token, ""));
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else if (type.equals("nottoken")) {
+                            if (conf.NetworkIsAvailable(getApplication())) {
+                                getCount(pref.getString(conf.tag_token, ""));
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (type.equals("logout")) {
+                            if (tokenMain.equals(pref.getString(conf.tag_token, "")) || token.equals(pref.getString(conf.tag_token, ""))) {
+                                doIncrease(0);
+                            }
+                        }
+                    } catch (JSONException e) { }
+                }
+            });
+        }
+    };
+
+    private void getCount(String token) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair(conf.tag_token, token));
+        JSONObject json = sr.getJson(conf.url_count, params);
+        if (json != null) {
+            try{
+                if (json.getBoolean(conf.res)) {
+                    int count = json.getInt(conf.tag_count);
+                    doIncrease(count);
+                } else {
+                    doIncrease(0);
+                }
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(this, R.string.serverunvalid, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_notify);
-        menuItem.setVisible(false);
+        menuItem.setIcon(counterDrawable(count, R.drawable.ic_notify));
+
         return true;
+    }
+
+    private Drawable counterDrawable(int count, int backgroundImageId) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.notify, null);
+        view.setBackgroundResource(backgroundImageId);
+
+        if (count == 0) {
+            View counterTextPanel = view.findViewById(R.id.counterPanel);
+            counterTextPanel.setVisibility(View.GONE);
+        } else {
+            TextView textView = (TextView) view.findViewById(R.id.count_txt);
+            textView.setText("" + count);
+        }
+
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.setDrawingCacheEnabled(true);
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+
+        return new BitmapDrawable(getResources(), bitmap);
+    }
+
+    private void doIncrease(int countDB) {
+        count = countDB;
+        invalidateOptionsMenu();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_notify){
-            Toast.makeText(getApplicationContext(), "xxx", Toast.LENGTH_SHORT).show();
+            displayView(7);
             return true;
         }
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             displayView(6);
             return true;
         }
@@ -129,8 +243,12 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
                 title = getString(R.string.profile);
                 break;
             case 6:
-                fragment = new Settings();
-                title = getString(R.string.settings);
+                fragment = new About();
+                title = getString(R.string.about);
+                break;
+            case 7:
+                fragment = new BoxNotify();
+                title = getString(R.string.box);
                 break;
             default:
                 break;
@@ -141,25 +259,22 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
                 if (title.equals(getString(R.string.app_name)) || title.equals(getString(R.string.about))) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.container_body, fragment);
                     fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.container_body, fragment);
                     fragmentTransaction.commit();
-                    getSupportActionBar().setTitle(title);
                 } else {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.container_body, new Login());
                     fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.container_body, new Login());
                     fragmentTransaction.commit();
-                    getSupportActionBar().setTitle(getString(R.string.login));
                 }
             } else {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
                 fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.container_body, fragment);
                 fragmentTransaction.commit();
-                getSupportActionBar().setTitle(title);
             }
         }
     }

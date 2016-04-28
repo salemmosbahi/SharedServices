@@ -11,11 +11,13 @@
     <string name="download">Download</string>
     <string name="download_add">Add Download</string>
     <string name="download_search">Search Download</string>
+    <string name="download_profile">Profile Download</string>
     <string name="download_complete">Download complete</string>
     <string name="download_pending">Download pending</string>
     <string name="event">Event</string>
     <string name="paper">Paper</string>
     <string name="profile">Profile</string>
+    <string name="box">Box</string>
     <string name="notify">Notify</string>
     <string name="name">Name</string>
     <string name="name_err">Enter the name</string>
@@ -46,6 +48,8 @@
     <string name="networkunvalid">Network is unavailable !!</string>
     <string name="serverunvalid">Server is unavailable !!</string>
     <string name="empty_fields_link">Empty fields !!</string>
+    <string name="demand">Demand</string>
+    <string name="complete">Complete</string>
 
     <string-array name="nav_drawer_labels">
         <item>@string/home</item>

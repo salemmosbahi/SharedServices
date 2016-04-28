@@ -221,11 +221,7 @@ public class SignUp extends Fragment {
     }
 
     private void LoginForm() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container_body, new Login());
-        ft.addToBackStack(null);
-        ft.commit();
-        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
+        goFragment(new Login());
     }
 
     private void submitForm() {
@@ -238,7 +234,6 @@ public class SignUp extends Fragment {
         Encryption algo = new Encryption();
         int x = algo.keyVirtual();
         String key = algo.key(x);
-        //algo.dec2enc(String.valueOf(driver), key)
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(conf.tag_key, x + ""));
         params.add(new BasicNameValuePair(conf.tag_picture, getStringPicture()));
@@ -258,11 +253,7 @@ public class SignUp extends Fragment {
                 String jsonstr = json.getString(conf.response);
                 Toast.makeText(getActivity(),jsonstr,Toast.LENGTH_LONG).show();
                 if(json.getBoolean(conf.res)){
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Login());
-                    //ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
+                    goFragment(new Login());
                 }
             }catch(JSONException e){
                 e.printStackTrace();
@@ -391,9 +382,27 @@ public class SignUp extends Fragment {
         }
     };
 
+    private void goFragment(Fragment fr) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.addToBackStack(null);
+        ft.replace(R.id.container_body, fr);
+        ft.commit();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().finish();
+        goFragment(new Login());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
 }

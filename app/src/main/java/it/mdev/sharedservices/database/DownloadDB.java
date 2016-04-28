@@ -4,20 +4,24 @@ package it.mdev.sharedservices.database;
  * Created by salem on 15/04/16.
  */
 public class DownloadDB {
-    private String id, name, date;
+    private String id, picture, name, date, status;
     private int size;
-    private boolean status;
 
-    public DownloadDB(String id, String name, String date, int size, boolean status) {
+    public DownloadDB(String id, String picture, String name, String date, String status, int size) {
         this.id = id;
+        this.picture = picture;
         this.name = name;
         this.date = date;
-        this.size = size;
         this.status = status;
+        this.size = size;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getPicture() {
+        return picture;
     }
 
     public String getName() {
@@ -28,16 +32,20 @@ public class DownloadDB {
         return date;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public int getSize() {
         return size;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public void setName(String name) {
@@ -48,11 +56,11 @@ public class DownloadDB {
         this.date = date;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setSize(int size) {
+        this.size = size;
     }
 }

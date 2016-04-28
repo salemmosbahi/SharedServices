@@ -1,6 +1,7 @@
 package it.mdev.sharedservices.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.github.nkzawa.socketio.client.Socket;
+
 import it.mdev.sharedservices.Main;
 import it.mdev.sharedservices.R;
 import it.mdev.sharedservices.util.Controllers;
+import it.mdev.sharedservices.util.SocketIO;
 
 /**
  * Created by salem on 4/4/16.
@@ -20,6 +24,7 @@ import it.mdev.sharedservices.util.Controllers;
 public class Home extends Fragment {
     SharedPreferences pref;
     Controllers conf = new Controllers();
+    //Socket socket = SocketIO.getInstance();
 
     private Button Car_btn, Download_btn, Paper_btn, Event_btn;
 
@@ -31,25 +36,14 @@ public class Home extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home, container, false);
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
         Car_btn = (Button) v.findViewById(R.id.Car_btn);
         Car_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref.getString(conf.tag_token, "").equals("")){
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Login());
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
-                }else{
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Car());
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.car));
-                }
+                goFragment(new Car());
             }
         });
 
@@ -57,19 +51,7 @@ public class Home extends Fragment {
         Download_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref.getString(conf.tag_token, "").equals("")){
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Login());
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
-                }else{
-                    Fragment fr = new Download();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, fr);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download));
-                }
+                goFragment(new Download());
             }
         });
 
@@ -77,18 +59,7 @@ public class Home extends Fragment {
         Event_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref.getString(conf.tag_token, "").equals("")) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Login());
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
-                } else {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Event());
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.event));
-                }
+                goFragment(new Event());
             }
         });
 
@@ -96,25 +67,40 @@ public class Home extends Fragment {
         Paper_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref.getString(conf.tag_token, "").equals("")){
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Login());
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
-                }else{
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Paper());
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.paper));
-                }
+                goFragment(new Paper());
             }
         });
+
         return  v;
+    }
+
+    private void goFragment(Fragment fr) {
+        if (pref.getString(conf.tag_token, "").equals("")) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.container_body, new Login());
+            ft.commit();
+        } else {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.container_body, fr);
+            ft.commit();
+        }
     }
 
     public void onDestroy() {
         super.onDestroy();
+        android.os.Process.killProcess(android.os.Process.myPid());
         getActivity().finish();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

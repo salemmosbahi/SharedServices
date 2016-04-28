@@ -56,6 +56,7 @@ public class Login extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.login, container, false);
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.login));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
         Email_input = (TextInputLayout) v.findViewById(R.id.Email_input);
@@ -89,11 +90,7 @@ public class Login extends Fragment {
     }
 
     private void signupForm() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container_body, new SignUp());
-        ft.addToBackStack(null);
-        ft.commit();
-        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.sign_up));
+        goFragment(new SignUp());
     }
 
     private void submitForm() {
@@ -116,6 +113,7 @@ public class Login extends Fragment {
                     String newKey = algo.key(keyVirtual);
                     String token = json.getString(conf.tag_token);
                     String username = algo.enc2dec(json.getString(conf.tag_fname), newKey) + " " + algo.enc2dec(json.getString(conf.tag_lname), newKey);
+                    String date = algo.enc2dec(json.getString(conf.tag_dateN), newKey);
                     String country = algo.enc2dec(json.getString(conf.tag_country), newKey);
                     String city = algo.enc2dec(json.getString(conf.tag_city), newKey);
                     String picture = json.getString(conf.tag_picture);
@@ -123,6 +121,7 @@ public class Login extends Fragment {
                     SharedPreferences.Editor edit = pref.edit();
                     edit.putString(conf.tag_token, token);
                     edit.putString(conf.tag_username, username);
+                    edit.putString(conf.tag_dateN, date);
                     edit.putString(conf.tag_country, country);
                     edit.putString(conf.tag_city, city);
                     edit.putString(conf.tag_picture, picture);
@@ -138,11 +137,7 @@ public class Login extends Fragment {
                     im.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
                     rl.addView(vi);
 
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new Home());
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
+                    goFragment(new Home());
                 }else{
                     Toast.makeText(getActivity(),response,Toast.LENGTH_SHORT).show();
                 }
@@ -204,8 +199,26 @@ public class Login extends Fragment {
         }
     }
 
+    private void goFragment(Fragment fr) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.addToBackStack(null);
+        ft.replace(R.id.container_body, fr);
+        ft.commit();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().finish();
+        goFragment(new Home());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

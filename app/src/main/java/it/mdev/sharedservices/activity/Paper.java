@@ -23,6 +23,8 @@ public class Paper extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.settings, container, false);
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.paper));
+
         return  v;
     }
 
@@ -30,10 +32,9 @@ public class Paper extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container_body, new Home());
         ft.addToBackStack(null);
+        ft.replace(R.id.container_body, new Home());
         ft.commit();
-        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.home));
     }
 
     @Override

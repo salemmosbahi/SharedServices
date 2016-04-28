@@ -1,12 +1,19 @@
 package it.mdev.sharedservices.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.CursorLoader;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import it.mdev.sharedservices.Main;
 import it.mdev.sharedservices.R;
@@ -43,6 +53,7 @@ public class DownloadAdd extends Fragment {
     Controllers conf = new Controllers();
     ServerRequest sr = new ServerRequest();
 
+    private ImageView Download_iv;
     private EditText Name_etxt, Size_etxt;
     private TextInputLayout Name_input, Size_input;
     private Spinner City_sp;
@@ -51,6 +62,7 @@ public class DownloadAdd extends Fragment {
     private ArrayList<String> CitysList;
     private ArrayAdapter<String> cityAdapter;
     private JSONArray citys = null;
+    private boolean isPicture = false;
 
     public DownloadAdd() {}
 
@@ -60,8 +72,10 @@ public class DownloadAdd extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.download_add, container, false);
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download_add));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
+        Download_iv = (ImageView) v.findViewById(R.id.Download_iv);
         Name_input = (TextInputLayout) v.findViewById(R.id.Name_input);
         Name_etxt = (EditText) v.findViewById(R.id.Name_etxt);
         Size_input = (TextInputLayout) v.findViewById(R.id.Size_input);
@@ -69,6 +83,16 @@ public class DownloadAdd extends Fragment {
         City_sp = (Spinner) v.findViewById(R.id.City_sp);
         Add_btn = (Button) v.findViewById(R.id.Add_btn);
         Empty_btn = (Button) v.findViewById(R.id.Empty_btn);
+
+        Download_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                try {
+                    startActivityForResult(i, 2);
+                } catch (ActivityNotFoundException e) { }
+            }
+        });
 
         CitysList = new ArrayList<String>();
         List<NameValuePair> cityParams = new ArrayList<NameValuePair>();
@@ -86,6 +110,9 @@ public class DownloadAdd extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            Add_btn.setEnabled(false);
+            Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         cityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,CitysList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -122,22 +149,27 @@ public class DownloadAdd extends Fragment {
         if (!validateSize()) { return; }
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
+        if (isPicture) {
+            params.add(new BasicNameValuePair(conf.tag_picture, getStringPicture()));
+        } else {
+            params.add(new BasicNameValuePair(conf.tag_picture, ""));
+        }
         params.add(new BasicNameValuePair(conf.tag_name, Name_etxt.getText().toString()));
         params.add(new BasicNameValuePair(conf.tag_size, Size_etxt.getText().toString()));
         params.add(new BasicNameValuePair(conf.tag_token, pref.getString(conf.tag_token, "")));
         params.add(new BasicNameValuePair(conf.tag_username, pref.getString(conf.tag_username, "")));
+        params.add(new BasicNameValuePair(conf.tag_date, pref.getString(conf.tag_dateN, "")));
         params.add(new BasicNameValuePair(conf.tag_city, City_sp.getSelectedItem().toString()));
         params.add(new BasicNameValuePair(conf.tag_country, pref.getString(conf.tag_country, "")));
         JSONObject json = sr.getJson(conf.url_addDownload, params);
-        if (json != null){
+        if (json != null) {
             try{
                 String response = json.getString(conf.response);
                 if(json.getBoolean(conf.res)) {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container_body, new DownloadSearch());
                     ft.addToBackStack(null);
+                    ft.replace(R.id.container_body, new DownloadSearch());
                     ft.commit();
-                    ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download_search));
                 }
                 Toast.makeText(getActivity(),response,Toast.LENGTH_SHORT).show();
             }catch(JSONException e){
@@ -180,5 +212,43 @@ public class DownloadAdd extends Fragment {
         if (view.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
+    }
+
+    private String getStringPicture() {
+        Download_iv.buildDrawingCache();
+        Bitmap bitmap = Download_iv.getDrawingCache();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == 2) {
+                Uri selectedImageUri = data.getData();
+                Download_iv.setImageURI(selectedImageUri);
+                isPicture = true;
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.addToBackStack(null);
+        ft.replace(R.id.container_body, new Download());
+        ft.commit();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

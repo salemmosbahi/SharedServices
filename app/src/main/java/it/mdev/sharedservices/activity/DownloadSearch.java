@@ -61,8 +61,8 @@ public class DownloadSearch extends Fragment {
     private JSONArray citys = null;
     private int year, month, day;
 
-    ArrayList<DownloadDB> DownloadDBList;
-    JSONArray dataJsonArray = null;
+    private ArrayList<DownloadDB> DownloadDBList;
+    private JSONArray dataJsonArray = null;
 
     public DownloadSearch() {}
 
@@ -72,6 +72,7 @@ public class DownloadSearch extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.download_search, container, false);
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download_search));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
         Name_input = (TextInputLayout) v.findViewById(R.id.Name_input);
@@ -121,6 +122,9 @@ public class DownloadSearch extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            Search_btn.setEnabled(false);
+            Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         cityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,CitysList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -156,17 +160,20 @@ public class DownloadSearch extends Fragment {
                     for (int i = 0; i < dataJsonArray.length(); i++) {
                         JSONObject c = dataJsonArray.getJSONObject(i);
                         String id = c.getString(conf.tag_id);
+                        String picture = c.getString(conf.tag_picture);
                         String name = c.getString(conf.tag_name);
                         int size = c.getInt(conf.tag_size);
                         String date = c.getString(conf.tag_date);
-                        boolean status = c.getBoolean(conf.tag_status);
-                        DownloadDB rec = new DownloadDB(id, name, date, size, status);
+                        String status = c.getString(conf.tag_status);
+                        DownloadDB rec = new DownloadDB(id, picture, name, date, status, size);
                         DownloadDBList.add(rec);
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         DownloadAdapterList adapter = new DownloadAdapterList(getActivity(), DownloadDBList, DownloadSearch.this);
         lv.setAdapter(adapter);
@@ -180,4 +187,23 @@ public class DownloadSearch extends Fragment {
             Date_txt.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.addToBackStack(null);
+        ft.replace(R.id.container_body, new Download());
+        ft.commit();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 }

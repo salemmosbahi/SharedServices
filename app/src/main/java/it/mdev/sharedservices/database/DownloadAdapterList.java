@@ -2,22 +2,27 @@ package it.mdev.sharedservices.database;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import it.mdev.sharedservices.R;
+import it.mdev.sharedservices.activity.BoxUsers;
 import it.mdev.sharedservices.activity.Download;
 import it.mdev.sharedservices.activity.DownloadProfile;
+import it.mdev.sharedservices.activity.DownloadSearch;
 import it.mdev.sharedservices.util.Controllers;
 
 /**
@@ -52,6 +57,7 @@ public class DownloadAdapterList extends BaseAdapter {
         if (v == null) {
             inflater = (LayoutInflater) contxt.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.download_list, null);
+            holder.Picture_iv = (ImageView) v.findViewById(R.id.Picture_iv);
             holder.Name_txt = (TextView) v.findViewById(R.id.Name_txt);
             holder.Status_txt = (TextView) v.findViewById(R.id.Status_txt);
             holder.Size_txt = (TextView) v.findViewById(R.id.Size_txt);
@@ -61,10 +67,17 @@ public class DownloadAdapterList extends BaseAdapter {
         } else {
             holder = (ReclamationHolder) v.getTag();
         }
-        holder.Name_txt.setText(data.get(position).getName());
-        if (data.get(position).isStatus()) {
-            holder.Status_txt.setText(R.string.download_complete);
+
+        if (data.get(position).getPicture().equals("")) {
+            holder.Picture_iv.setImageResource(R.drawable.ic_profile_r);
         } else {
+            byte[] imageAsBytes = Base64.decode(data.get(position).getPicture().getBytes(), Base64.DEFAULT);
+            holder.Picture_iv.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+        }
+        holder.Name_txt.setText(data.get(position).getName());
+        if (data.get(position).getStatus().equals("complete")) {
+            holder.Status_txt.setText(R.string.download_complete);
+        } else if (data.get(position).getStatus().equals("pending")) {
             holder.Status_txt.setText(R.string.download_pending);
         }
         holder.Size_txt.setText(data.get(position).getSize() + " Go");
@@ -75,11 +88,16 @@ public class DownloadAdapterList extends BaseAdapter {
             public void onClick(View x) {
                 Fragment fr = new DownloadProfile();
                 FragmentTransaction ft = fragment.getFragmentManager().beginTransaction();
+                ft.addToBackStack(null);
                 Bundle args = new Bundle();
                 args.putString(conf.tag_id, data.get(position).getId());
+                if (Download.class.isInstance(fragment)) {
+                    args.putString(conf.tag_activity, "Download");
+                } else if (DownloadSearch.class.isInstance(fragment)) {
+                    args.putString(conf.tag_activity, "DownloadSearch");
+                }
                 fr.setArguments(args);
                 ft.replace(R.id.container_body, fr);
-                ft.addToBackStack(null);
                 ft.commit();
             }
         });
@@ -87,6 +105,7 @@ public class DownloadAdapterList extends BaseAdapter {
     }
 
     class ReclamationHolder {
+        ImageView Picture_iv;
         TextView Name_txt, Status_txt, Size_txt, Date_txt;
         RelativeLayout Row_relative;
     }

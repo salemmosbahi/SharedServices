@@ -51,6 +51,7 @@ public class Download extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.download, container, false);
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
         Refresh_swipe = (SwipeRefreshLayout) v.findViewById(R.id.Refresh_swipe);
@@ -67,10 +68,9 @@ public class Download extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_body, new DownloadAdd());
                 ft.addToBackStack(null);
+                ft.replace(R.id.container_body, new DownloadAdd());
                 ft.commit();
-                ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download_add));
             }
         });
 
@@ -79,10 +79,9 @@ public class Download extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_body, new DownloadSearch());
                 ft.addToBackStack(null);
+                ft.replace(R.id.container_body, new DownloadSearch());
                 ft.commit();
-                ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.download_search));
             }
         });
         return  v;
@@ -96,27 +95,28 @@ public class Download extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             params.add(new BasicNameValuePair(conf.tag_city, pref.getString(conf.tag_city, "")));
             DownloadDBList = new ArrayList<>();
             JSONObject json = sr.getJson(conf.url_getDownloadEnd, params);
-            if(json != null){
+            if (json != null) {
                 try{
                     if(json.getBoolean(conf.res)) {
                         dataJsonArray = json.getJSONArray(conf.data);
                         for (int i = 0; i < dataJsonArray.length(); i++) {
                             JSONObject c = dataJsonArray.getJSONObject(i);
                             String id = c.getString(conf.tag_id);
+                            String picture = c.getString(conf.tag_picture);
                             String name = c.getString(conf.tag_name);
                             int size = c.getInt(conf.tag_size);
                             String date = c.getString(conf.tag_date);
-                            boolean status = c.getBoolean(conf.tag_status);
-                            DownloadDB rec = new DownloadDB(id, name, date, size, status);
+                            String status = c.getString(conf.tag_status);
+                            DownloadDB rec = new DownloadDB(id, picture, name, date, status, size);
                             DownloadDBList.add(rec);
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                DownloadAdapterList adapter = new DownloadAdapterList(getActivity(), DownloadDBList, Download.this);
+                lv.setAdapter(adapter);
             }
-            DownloadAdapterList adapter = new DownloadAdapterList(getActivity(), DownloadDBList, Download.this);
-            lv.setAdapter(adapter);
             Refresh_swipe.setRefreshing(false);
         }else{
             Refresh_swipe.setRefreshing(false);
@@ -131,10 +131,9 @@ public class Download extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     public void onDestroy() {
         super.onDestroy();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container_body, new Home());
         ft.addToBackStack(null);
+        ft.replace(R.id.container_body, new Home());
         ft.commit();
-        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.home));
     }
 
     @Override

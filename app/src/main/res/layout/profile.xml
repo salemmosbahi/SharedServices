@@ -63,13 +63,32 @@
             android:textSize="18sp" />
 
         <RatingBar
-            android:id="@+id/Pt_rb"
+            android:id="@+id/Point_rb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
             android:rating="1.0"
             android:stepSize="0.1"
             android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/PointService_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/purpleDeep"
+            android:text="pt of service"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <RatingBar
+            android:id="@+id/PointService_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="1.0"
+            android:stepSize="0.1"
+            android:isIndicator="true"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/Email_txt"
@@ -102,14 +121,14 @@
             android:textAllCaps="false"
             android:background="@color/red"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:visibility="gone">
+            android:gravity="center_horizontal">
 
             <Button
                 android:id="@+id/Refuse_btn"
@@ -120,7 +139,8 @@
                 android:textAllCaps="false"
                 android:background="@color/red"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/Accept_btn"
@@ -131,7 +151,8 @@
                 android:textAllCaps="false"
                 android:background="@color/red"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
