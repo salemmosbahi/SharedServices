@@ -53,7 +53,7 @@ public class DownloadAdapterList extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
-        ReclamationHolder holder = new ReclamationHolder();
+        DownloadHolder holder = new DownloadHolder();
         if (v == null) {
             inflater = (LayoutInflater) contxt.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.download_list, null);
@@ -65,7 +65,7 @@ public class DownloadAdapterList extends BaseAdapter {
             holder.Row_relative = (RelativeLayout) v.findViewById(R.id.Row_rl);
             v.setTag(holder);
         } else {
-            holder = (ReclamationHolder) v.getTag();
+            holder = (DownloadHolder) v.getTag();
         }
 
         if (data.get(position).getPicture().equals("")) {
@@ -104,7 +104,7 @@ public class DownloadAdapterList extends BaseAdapter {
         return v;
     }
 
-    class ReclamationHolder {
+    class DownloadHolder {
         ImageView Picture_iv;
         TextView Name_txt, Status_txt, Size_txt, Date_txt;
         RelativeLayout Row_relative;

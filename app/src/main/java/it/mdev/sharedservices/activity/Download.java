@@ -84,6 +84,7 @@ public class Download extends Fragment implements SwipeRefreshLayout.OnRefreshLi
                 ft.commit();
             }
         });
+
         return  v;
     }
 

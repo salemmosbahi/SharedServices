@@ -8,6 +8,11 @@
     <string name="close">Close</string>
     <string name="home">Home</string>
     <string name="car">Car</string>
+    <string name="car_add">Add Car</string>
+    <string name="car_search">Search Car</string>
+    <string name="car_profile">Profile Car</string>
+    <string name="car_complete">Car complete</string>
+    <string name="car_pending">Car pending</string>
     <string name="download">Download</string>
     <string name="download_add">Add Download</string>
     <string name="download_search">Search Download</string>
@@ -39,6 +44,7 @@
     <string name="lname">Last name</string>
     <string name="lname_err">Enter the last name</string>
     <string name="hint_date">yyyy-mm-dd</string>
+    <string name="hint_time">hh-mm</string>
     <string name="phone">Phone number</string>
     <string name="phone_err">Enter the phone number</string>
     <string name="driver">Driver license</string>
@@ -50,6 +56,17 @@
     <string name="empty_fields_link">Empty fields !!</string>
     <string name="demand">Demand</string>
     <string name="complete">Complete</string>
+    <string name="model">Model</string>
+    <string name="model_err">Enter the model of car</string>
+    <string name="description">Description</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="going">Going</string>
+    <string name="going_coming">Going and Coming</string>
+    <string name="highway">Highway</string>
+    <string name="highway_not">Not Highway</string>
+    <string name="place">Place</string>
+    <string name="place_err">Enter the number of places between 1 and 8</string>
 
     <string-array name="nav_drawer_labels">
         <item>@string/home</item>

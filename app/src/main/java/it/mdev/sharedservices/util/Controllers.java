@@ -25,13 +25,20 @@ public class Controllers {
     public static final String url_getDownload = url + "/getDownload";
     public static final String url_getDownloadProfile = url + "/getDownloadProfile";
     public static final String url_addDownload = url + "/addDownload";
+    public static final String url_completeDownload = url + "/completeDownload";
+
+    public static final String url_getCarEnd = url + "/getDownloadEnd";
+    public static final String url_getCar = url + "/getDownload";
+    public static final String url_getCarProfile = url + "/getDownloadProfile";
+    public static final String url_addCar = url + "/addDownload";
+    public static final String url_completeCar = url + "/completeDownload";
+
     public static final String url_changeStatus = url + "/changeStatus";
     public static final String url_checkVote = url + "/checkVote";
     public static final String url_boxList = url + "/boxList";
     public static final String url_boxUsersList = url + "/boxUsersList";
     public static final String url_checkDemand = url + "/checkDemand";
     public static final String url_addDemand = url + "/addDemand";
-    public static final String url_completeDownload = url + "/completeDownload";
     public static final String url_count = url + "/count";
 
     public static final String tag_key = "key";
@@ -69,6 +76,14 @@ public class Controllers {
     public static final String tag_activity = "activity";
     public static final String tag_count = "count";
     public static final String tag_type = "type";
+    public static final String tag_model = "model";
+    public static final String tag_depart = "depart";
+    public static final String tag_destination = "destination";
+    public static final String tag_description = "description";
+    public static final String tag_time = "time";
+    public static final String tag_goingComing = "goingComing";
+    public static final String tag_highway = "highway";
+    public static final String tag_place = "place";
 
     public static final String io_count = "countNotify";
 
