@@ -16,7 +16,10 @@ import java.util.List;
 
 import it.mdev.sharedservices.R;
 import it.mdev.sharedservices.activity.BoxUsers;
+import it.mdev.sharedservices.activity.CarProfile;
 import it.mdev.sharedservices.activity.DownloadProfile;
+import it.mdev.sharedservices.activity.EventProfile;
+import it.mdev.sharedservices.activity.PaperProfile;
 import it.mdev.sharedservices.activity.Profile;
 import it.mdev.sharedservices.util.Controllers;
 
@@ -52,16 +55,16 @@ public class UserCopyAdapterList extends BaseAdapter {
         if (v == null) {
             inflater = (LayoutInflater) contxt.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.user_copy_list, null);
-            holder.Userame_txt = (TextView) v.findViewById(R.id.Userame_txt);
-            holder.Age_txt = (TextView) v.findViewById(R.id.Age_txt);
-            holder.Row_relative = (RelativeLayout) v.findViewById(R.id.Row_rl);
+            holder.UserameUCAL_txt = (TextView) v.findViewById(R.id.UserameUCAL_txt);
+            holder.AgeUCAL_txt = (TextView) v.findViewById(R.id.AgeUCAL_txt);
+            holder.RowUCAL_relative = (RelativeLayout) v.findViewById(R.id.RowUCAL_rl);
             v.setTag(holder);
         } else {
             holder = (UserCopyHolder) v.getTag();
         }
-        holder.Userame_txt.setText(data.get(position).getUsername());
-        holder.Age_txt.setText(data.get(position).getAge());
-        holder.Row_relative.setOnClickListener(new View.OnClickListener() {
+        holder.UserameUCAL_txt.setText(data.get(position).getUsername());
+        holder.AgeUCAL_txt.setText(data.get(position).getAge());
+        holder.RowUCAL_relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View x) {
                 Fragment fr = new Profile();
@@ -70,8 +73,14 @@ public class UserCopyAdapterList extends BaseAdapter {
                 Bundle args = new Bundle();
                 if (BoxUsers.class.isInstance(fragment)) {
                     args.putString(conf.tag_activity, "BoxUsers");
+                } else if (CarProfile.class.isInstance(fragment)) {
+                    args.putString(conf.tag_activity, "CarProfile");
                 } else if (DownloadProfile.class.isInstance(fragment)) {
                     args.putString(conf.tag_activity, "DownloadProfile");
+                } else if (EventProfile.class.isInstance(fragment)) {
+                    args.putString(conf.tag_activity, "EventProfile");
+                } else if (PaperProfile.class.isInstance(fragment)) {
+                    args.putString(conf.tag_activity, "PaperProfile");
                 }
                 args.putString(conf.tag_id, data.get(position).getToken());
                 args.putString(conf.tag_service, data.get(position).getService());
@@ -86,7 +95,7 @@ public class UserCopyAdapterList extends BaseAdapter {
     }
 
     class UserCopyHolder {
-        TextView Userame_txt, Age_txt;
-        RelativeLayout Row_relative;
+        TextView UserameUCAL_txt, AgeUCAL_txt;
+        RelativeLayout RowUCAL_relative;
     }
 }

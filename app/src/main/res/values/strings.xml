@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Shared Services</string>
+    <string name="app_version">Version 1.0</string>
+    <string name="app_copy">© 2016 Shared Services</string>
 
     <string name="settings">Settings</string>
     <string name="accept">Accept</string>
@@ -7,22 +9,34 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="home">Home</string>
+
     <string name="car">Car</string>
     <string name="car_add">Add Car</string>
     <string name="car_search">Search Car</string>
     <string name="car_profile">Profile Car</string>
     <string name="car_complete">Car complete</string>
     <string name="car_pending">Car pending</string>
+
     <string name="download">Download</string>
     <string name="download_add">Add Download</string>
     <string name="download_search">Search Download</string>
     <string name="download_profile">Profile Download</string>
     <string name="download_complete">Download complete</string>
     <string name="download_pending">Download pending</string>
+
     <string name="event">Event</string>
+    <string name="event_add">Add Event</string>
+    <string name="event_search">Search Event</string>
+    <string name="event_profile">Profile Event</string>
+    <string name="event_complete">Event complete</string>
+    <string name="event_pending">Event pending</string>
+
     <string name="paper">Paper</string>
+    <string name="paper_profile">Profile Paper</string>
+
     <string name="profile">Profile</string>
     <string name="box">Box</string>
+    <string name="boxUser">Box Users</string>
     <string name="notify">Notify</string>
     <string name="name">Name</string>
     <string name="name_err">Enter the name</string>
@@ -59,14 +73,20 @@
     <string name="model">Model</string>
     <string name="model_err">Enter the model of car</string>
     <string name="description">Description</string>
+    <string name="description_err">Enter the description</string>
     <string name="from">From</string>
     <string name="to">To</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
     <string name="going">Going</string>
     <string name="going_coming">Going and Coming</string>
     <string name="highway">Highway</string>
     <string name="highway_not">Not Highway</string>
     <string name="place">Place</string>
     <string name="place_err">Enter the number of places between 1 and 8</string>
+    <string name="vote">Vote</string>
+    <string name="spv">Service point of voting</string>
+    <string name="chv">Click here to vote !!</string>
 
     <string-array name="nav_drawer_labels">
         <item>@string/home</item>

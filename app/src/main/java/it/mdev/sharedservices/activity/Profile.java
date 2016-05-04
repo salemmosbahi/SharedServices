@@ -1,6 +1,7 @@
 package it.mdev.sharedservices.activity;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -18,6 +19,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -58,10 +60,15 @@ public class Profile extends Fragment {
     private ImageView Picture_iv;
     private RatingBar Point_rb, PointService_rb;
     private Button Logout_btn, Refuse_btn, Accept_btn;
+    public static Dialog rankDialog;
+    public static RatingBar ratingBar;
+    public static Button Vote_btn;
+    public static TextView Service_txt;
 
     private String activity;
     private String tokenVisitor, fname, lname, gender, dateN, country, city, email, phone, point, pointService, picture, service, idService;
-    private Boolean driver;
+    private boolean driver, vote;
+    private int value;
 
     public Profile() {}
 
@@ -74,6 +81,7 @@ public class Profile extends Fragment {
         ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.profile));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
+        vote = false;
         if (getArguments() != null) {
             activity = getArguments().getString(conf.tag_activity);
             tokenVisitor = getArguments().getString(conf.tag_id);
@@ -114,16 +122,17 @@ public class Profile extends Fragment {
             Refuse_btn.setVisibility(View.VISIBLE);
             PointService_txt.setVisibility(View.VISIBLE);
             PointService_rb.setVisibility(View.VISIBLE);
-        } else if (activity.equals("DownloadProfile")) {
+        } else {
             if (tokenVisitor.equals(pref.getString(conf.tag_token, ""))) {
                 Logout_btn.setVisibility(View.VISIBLE);
             } else {
                 Logout_btn.setVisibility(View.GONE);
+                vote = true;
             }
             Accept_btn.setVisibility(View.GONE);
             Refuse_btn.setVisibility(View.GONE);
-            PointService_txt.setVisibility(View.GONE);
-            PointService_rb.setVisibility(View.GONE);
+            PointService_txt.setVisibility(View.VISIBLE);
+            PointService_rb.setVisibility(View.VISIBLE);
         }
 
         LayerDrawable stars = (LayerDrawable) DrawableCompat.unwrap(Point_rb.getProgressDrawable());
@@ -132,9 +141,25 @@ public class Profile extends Fragment {
         stars.getDrawable(0).setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
 
         LayerDrawable starx = (LayerDrawable) DrawableCompat.unwrap(PointService_rb.getProgressDrawable());
-        starx.getDrawable(2).setColorFilter(getResources().getColor(R.color.purpleDeep), PorterDuff.Mode.SRC_ATOP);
-        starx.getDrawable(1).setColorFilter(getResources().getColor(R.color.purpleDeep), PorterDuff.Mode.SRC_ATOP);
-        starx.getDrawable(0).setColorFilter(getResources().getColor(R.color.purpleDeep), PorterDuff.Mode.SRC_ATOP);
+        starx.getDrawable(2).setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        starx.getDrawable(1).setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        starx.getDrawable(0).setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+
+        PointService_txt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                clickVote();
+            }
+        });
+
+        PointService_rb.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    clickVote();
+                }
+                return true;
+            }
+        });
 
         Logout_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -167,11 +192,14 @@ public class Profile extends Fragment {
         });
 
         if(conf.NetworkIsAvailable(getActivity())){
+            Point_rb.setVisibility(View.VISIBLE);
             getProfile();
         }else{
-            Logout_btn.setVisibility(View.GONE);
-            Point_rb.setVisibility(View.GONE);
             Toast.makeText(getActivity(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
+        }
+
+        if (vote && controlVote()) {
+            PointService_txt.setText(R.string.chv);
         }
 
         return v;
@@ -217,8 +245,12 @@ public class Profile extends Fragment {
                     if (pointService != "") {
                         PointService_rb.setRating(Float.parseFloat(pointService));
                     }
-                    byte[] imageAsBytes = Base64.decode(picture.getBytes(), Base64.DEFAULT);
-                    Picture_iv.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+                    if (picture.equals("")) {
+                        Picture_iv.setBackgroundResource(R.drawable.profile);
+                    } else {
+                        byte[] imageAsBytes = Base64.decode(picture.getBytes(), Base64.DEFAULT);
+                        Picture_iv.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+                    }
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
@@ -301,16 +333,71 @@ public class Profile extends Fragment {
         }
     }
 
-    private boolean checkVote(){
+    private void clickVote() {
+        if (PointService_txt.getText().equals(getString(R.string.chv))) {
+            if (conf.NetworkIsAvailable(getActivity())) {
+                if (controlVote()) {
+                    vote();
+                } else {
+                    Toast.makeText(getActivity(),fname + " is noted or " + service + " not complete",Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void vote() {
+        rankDialog = new Dialog(getActivity(), R.style.FullHeightDialog);
+        rankDialog.setContentView(R.layout.dialog);
+        rankDialog.setCancelable(true);
+        rankDialog.show();
+        ratingBar = (RatingBar) rankDialog.findViewById(R.id.Vote_rat);
+        LayerDrawable stary = (LayerDrawable) DrawableCompat.unwrap(ratingBar.getProgressDrawable());
+        stary.getDrawable(2).setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+        stary.getDrawable(1).setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+        stary.getDrawable(0).setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        Service_txt = (TextView) rankDialog.findViewById(R.id.Service_txt);
+        Service_txt.setText(service);
+        Vote_btn = (Button) rankDialog.findViewById(R.id.Vote_btn);
+        Vote_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rankDialog.dismiss();
+                value = (int) ratingBar.getRating();
+                value *= 2;
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair(conf.tag_service, service));
+                params.add(new BasicNameValuePair(conf.tag_idService, idService));
+                params.add(new BasicNameValuePair(conf.tag_token, tokenVisitor));
+                params.add(new BasicNameValuePair(conf.tag_pt, "" + value));
+                JSONObject json = sr.getJson(conf.url_vote, params);
+                if (json != null) {
+                    try {
+                        Toast.makeText(getActivity(), json.getString(conf.response), Toast.LENGTH_SHORT).show();
+                        if (json.getBoolean(conf.res)) {
+                            getProfile();
+                            PointService_txt.setText(R.string.spv);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private boolean controlVote(){
         boolean check = false;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair(conf.tag_idService, ""));
-        params.add(new BasicNameValuePair(conf.tag_tokenVisitor, ""));
         params.add(new BasicNameValuePair(conf.tag_service, service));
-        JSONObject json = sr.getJson(conf.url_checkVote, params);
+        params.add(new BasicNameValuePair(conf.tag_idService, idService));
+        params.add(new BasicNameValuePair(conf.tag_token, tokenVisitor));
+        params.add(new BasicNameValuePair(conf.tag_usernameMain, pref.getString(conf.tag_username, "")));
+        JSONObject json = sr.getJson(conf.url_controlVote, params);
         if (json != null) {
             try{
-                check = json.getBoolean("res");
+                check = json.getBoolean(conf.res);
             }catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -343,7 +430,35 @@ public class Profile extends Fragment {
             ft.replace(R.id.container_body, fr);
             ft.commit();
         } else if (activity.equals("DownloadProfile")) {
-            goFragment(new DownloadProfile());
+            Fragment fr = new DownloadProfile();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            Bundle args = new Bundle();
+            args.putString(conf.tag_id, idService);
+            args.putString(conf.tag_activity, activity);
+            fr.setArguments(args);
+            ft.replace(R.id.container_body, fr);
+            ft.commit();
+        } else if (activity.equals("CarProfile")) {
+            Fragment fr = new CarProfile();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            Bundle args = new Bundle();
+            args.putString(conf.tag_id, idService);
+            args.putString(conf.tag_activity, activity);
+            fr.setArguments(args);
+            ft.replace(R.id.container_body, fr);
+            ft.commit();
+        } else if (activity.equals("EventProfile")) {
+            Fragment fr = new EventProfile();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            Bundle args = new Bundle();
+            args.putString(conf.tag_id, idService);
+            args.putString(conf.tag_activity, activity);
+            fr.setArguments(args);
+            ft.replace(R.id.container_body, fr);
+            ft.commit();
         }
     }
 

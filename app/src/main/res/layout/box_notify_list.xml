@@ -3,46 +3,50 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/BoxNotify_rl"
-    android:padding="10dp" >
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/PictureBN_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
 
     <LinearLayout
-        android:id="@+id/Info_ll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="8dp" />
+        android:id="@+id/InfoBN_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/PictureBN_iv"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/Name_txt"
-            android:layout_width="wrap_content"
+            android:id="@+id/NameBN_txt"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/img"
-            android:layout_toRightOf="@+id/img"
-            android:textSize="17dip"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/red"
+            android:textSize="17sp"
             android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/NameBN_txt"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/UsernameBN_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/ServiceBN_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="14sp"
+                android:textColor="@color/red" />
+        </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/Username_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Info_ll"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="1dip"
-        android:textSize="14dip"/>
-
-    <TextView
-        android:id="@+id/Service_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Info_ll"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="1dip"
-        android:textSize="14dip"/>
 </RelativeLayout>

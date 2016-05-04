@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,11 +49,11 @@ public class CarSearch extends Fragment {
     Calculator cal = new Calculator();
     ServerRequest sr = new ServerRequest();
 
-    private Spinner CityDepart_sp, CityDestination_sp;
-    private TextView Date_txt;
-    private SwitchCompat Car_swt, GoingComing_swt, Highway_swt;
-    private Button Search_btn;
-    private ListView lv;
+    private Spinner CityDepartCS_sp, CityDestinationCS_sp;
+    private TextView DateCS_txt;
+    private SwitchCompat CarCS_swt, GoingComingCS_swt, HighwayCS_swt;
+    private Button SearchCS_btn;
+    private ListView lvCS;
 
     private ArrayList<String> CitysList;
     private ArrayAdapter<String> cityAdapter;
@@ -71,22 +74,44 @@ public class CarSearch extends Fragment {
         ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.car_search));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
-        CityDepart_sp = (Spinner) v.findViewById(R.id.CityDepart_sp);
-        CityDestination_sp = (Spinner) v.findViewById(R.id.CityDestination_sp);
-        Date_txt = (TextView) v.findViewById(R.id.Date_txt);
-        Car_swt = (SwitchCompat) v.findViewById(R.id.Car_swt);
-        GoingComing_swt = (SwitchCompat) v.findViewById(R.id.GoingComing_swt);
-        Highway_swt = (SwitchCompat) v.findViewById(R.id.Highway_swt);
-        Search_btn = (Button) v.findViewById(R.id.Search_btn);
-        lv = (ListView) v.findViewById(R.id.Car_lv);
+        CityDepartCS_sp = (Spinner) v.findViewById(R.id.CityDepartCS_sp);
+        CityDestinationCS_sp = (Spinner) v.findViewById(R.id.CityDestinationCS_sp);
+        DateCS_txt = (TextView) v.findViewById(R.id.DateCS_txt);
+        CarCS_swt = (SwitchCompat) v.findViewById(R.id.CarCS_swt);
+        GoingComingCS_swt = (SwitchCompat) v.findViewById(R.id.GoingComingCS_swt);
+        HighwayCS_swt = (SwitchCompat) v.findViewById(R.id.HighwayCS_swt);
+        SearchCS_btn = (Button) v.findViewById(R.id.SearchCS_btn);
+        lvCS = (ListView) v.findViewById(R.id.CarCS_lv);
 
-        Car_swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        CarCS_swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Car_swt.setText(R.string.car_complete);
+                    CarCS_swt.setText(R.string.car_complete);
                 } else {
-                    Car_swt.setText(R.string.car_pending);
+                    CarCS_swt.setText(R.string.car_pending);
+                }
+            }
+        });
+
+        GoingComingCS_swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    GoingComingCS_swt.setText(R.string.going_coming);
+                } else {
+                    GoingComingCS_swt.setText(R.string.going);
+                }
+            }
+        });
+
+        HighwayCS_swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    HighwayCS_swt.setText(R.string.highway);
+                } else {
+                    HighwayCS_swt.setText(R.string.highway_not);
                 }
             }
         });
@@ -95,8 +120,8 @@ public class CarSearch extends Fragment {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        Date_txt.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(1));
-        Date_txt.setOnClickListener(new View.OnClickListener() {
+        DateCS_txt.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
+        DateCS_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(getActivity(), R.style.MyMaterialDesignTheme, dateSetListener, year, month, day).show();
@@ -120,17 +145,15 @@ public class CarSearch extends Fragment {
                 e.printStackTrace();
             }
         } else {
-            Search_btn.setEnabled(false);
             Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         cityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,CitysList);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        CityDepart_sp.setAdapter(cityAdapter);
-        CityDestination_sp.setAdapter(cityAdapter);
-        CityDepart_sp.setSelection(cityAdapter.getPosition(pref.getString(conf.tag_city, "")));
-        CityDestination_sp.setSelection(cityAdapter.getPosition(pref.getString(conf.tag_city, "")) + 1);
+        CityDepartCS_sp.setAdapter(cityAdapter);
+        CityDestinationCS_sp.setAdapter(cityAdapter);
+        CityDepartCS_sp.setSelection(cityAdapter.getPosition(pref.getString(conf.tag_city, "")));
 
-        Search_btn.setOnClickListener(new View.OnClickListener() {
+        SearchCS_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (conf.NetworkIsAvailable(getActivity())) {
                     searchForm();
@@ -146,16 +169,16 @@ public class CarSearch extends Fragment {
     private void searchForm() {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(conf.tag_country, pref.getString(conf.tag_country, "")));
-        params.add(new BasicNameValuePair(conf.tag_depart, CityDepart_sp.getSelectedItem().toString()));
-        params.add(new BasicNameValuePair(conf.tag_destination, CityDestination_sp.getSelectedItem().toString()));
-        params.add(new BasicNameValuePair(conf.tag_date, Date_txt.getText().toString()));
-        params.add(new BasicNameValuePair(conf.tag_status, Car_swt.getText().toString()));
-        params.add(new BasicNameValuePair(conf.tag_goingComing, GoingComing_swt.getText().toString()));
-        params.add(new BasicNameValuePair(conf.tag_highway, Highway_swt.getText().toString()));
+        params.add(new BasicNameValuePair(conf.tag_depart, CityDepartCS_sp.getSelectedItem().toString()));
+        params.add(new BasicNameValuePair(conf.tag_destination, CityDestinationCS_sp.getSelectedItem().toString()));
+        params.add(new BasicNameValuePair(conf.tag_date, DateCS_txt.getText().toString()));
+        params.add(new BasicNameValuePair(conf.tag_status, CarCS_swt.getText().toString()));
+        params.add(new BasicNameValuePair(conf.tag_goingComing, GoingComingCS_swt.getText().toString()));
+        params.add(new BasicNameValuePair(conf.tag_highway, HighwayCS_swt.getText().toString()));
         CarDBList = new ArrayList<>();
         JSONObject json = sr.getJson(conf.url_getCar, params);
         if(json != null){
-            try{
+            try {
                 if(json.getBoolean(conf.res)) {
                     dataJsonArray = json.getJSONArray(conf.data);
                     for (int i = 0; i < dataJsonArray.length(); i++) {
@@ -176,7 +199,20 @@ public class CarSearch extends Fragment {
             Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         CarAdapterList adapter = new CarAdapterList(getActivity(), CarDBList, CarSearch.this);
-        lv.setAdapter(adapter);
+        lvCS.setAdapter(adapter);
+        int list_height = getListViewHeight(lvCS);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) lvCS.getLayoutParams();
+        lp.height = list_height;
+        lvCS.setLayoutParams(lp);
+    }
+
+    private int getListViewHeight(ListView list) {
+        ListAdapter adapter = list.getAdapter();
+        int listviewHeight = 0;
+        list.measure(View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        listviewHeight = list.getMeasuredHeight() * adapter.getCount() + (adapter.getCount() * list.getDividerHeight());
+        return listviewHeight;
     }
 
     DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -184,7 +220,7 @@ public class CarSearch extends Fragment {
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
-            Date_txt.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
+            DateCS_txt.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
         }
     };
 

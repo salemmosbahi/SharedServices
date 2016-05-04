@@ -29,8 +29,6 @@ import java.util.List;
 
 import it.mdev.sharedservices.Main;
 import it.mdev.sharedservices.R;
-import it.mdev.sharedservices.database.DownloadAdapterList;
-import it.mdev.sharedservices.database.DownloadDB;
 import it.mdev.sharedservices.database.UserCopyAdapterList;
 import it.mdev.sharedservices.database.UserCopyDB;
 import it.mdev.sharedservices.util.Calculator;
@@ -71,6 +69,11 @@ public class DownloadProfile extends Fragment {
 
         idService = getArguments().getString(conf.tag_id);
         activity = getArguments().getString(conf.tag_activity);
+        if (!activity.equals("DownloadProfile")) {
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putString(conf.tag_activity, activity);
+            edit.commit();
+        }
         tokenApp = pref.getString(conf.tag_token, "");
         usernameApp = pref.getString(conf.tag_username, "");
 
@@ -96,14 +99,15 @@ public class DownloadProfile extends Fragment {
         }
 
         if (picture.equals("")) {
-            Picture_iv.setImageResource(R.drawable.ic_profile_r);
+            Picture_iv.setImageResource(R.drawable.download);
         } else {
             byte[] imageAsBytes = Base64.decode(picture.getBytes(), Base64.DEFAULT);
             Picture_iv.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
         }
         Name_txt.setText(name);
         Size_txt.setText(size + " go");
-        Location_txt.setText(city + " - " + country);
+        Location_txt.setText(city + " - " + country + ".");
+        Status_txt.setText(status);
         Date_txt.setText("Created in " + date);
         DateComplete_txt.setText("Completed in " + dateComplete);
         UserMain_txt.setText("Main: " + usernameMain);
@@ -152,6 +156,7 @@ public class DownloadProfile extends Fragment {
                     dateComplete = jsonx.getString(conf.tag_dateComplete);
                     Complete_btn.setVisibility(View.GONE);
                     DateComplete_txt.setText("Completed in " + dateComplete);
+                    Status_txt.setText("complete");
                     DateComplete_txt.setVisibility(View.VISIBLE);
                 }
             } catch (JSONException e) {
@@ -161,6 +166,7 @@ public class DownloadProfile extends Fragment {
     }
 
     private void addDemandFunc() {
+
         JSONObject jx = new JSONObject();
         try {
             jx.put(conf.tag_type, "token");
@@ -252,22 +258,36 @@ public class DownloadProfile extends Fragment {
         }
     }
 
-    private void goFragment(Fragment fr) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.addToBackStack(null);
-        ft.replace(R.id.container_body, fr);
-        ft.commit();
+    private void goFragment(String str) {
+        if (str.equals("BoxNotify")) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.container_body, new BoxNotify());
+            ft.commit();
+        } else if (str.equals("Download")) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.container_body, new Download());
+            ft.commit();
+        } else if (str.equals("DownloadSearch")) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.container_body, new DownloadSearch());
+            ft.commit();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (activity.equals("BoxNotify")) {
-            goFragment(new BoxNotify());
+            goFragment("BoxNotify");
         } else if (activity.equals("Download")) {
-            goFragment(new Download());
+            goFragment("Download");
         } else if (activity.equals("DownloadSearch")) {
-            goFragment(new DownloadSearch());
+            goFragment("DownloadSearch");
+        } else if (activity.equals("DownloadProfile")) {
+            goFragment(pref.getString(conf.tag_activity, ""));
         }
     }
 

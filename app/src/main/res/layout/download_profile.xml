@@ -26,7 +26,7 @@
                 app:civ_border_width="2dp"
                 app:civ_border_color="@color/red"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_profile_r"/>
+                android:src="@drawable/download"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -131,6 +131,6 @@
             android:id="@+id/UserCopy_lv"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"/>
+            android:layout_margin="10dp"/>
     </LinearLayout>
 </LinearLayout>

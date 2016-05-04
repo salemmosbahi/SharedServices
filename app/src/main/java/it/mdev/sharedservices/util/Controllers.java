@@ -14,27 +14,38 @@ public class Controllers {
     public static final String data = "data";
 
     //public static final String url = "http://10.0.2.2:4000";
-    public static final String url = "http://192.168.1.3:4000";
+    public static final String url = "http://mahd.company:4000";
     public static final String url_getAllCountry = url + "/getAllCountry";
     public static final String url_getAllCity = url + "/getAllCity";
     public static final String url_login = url + "/login";
     public static final String url_logout = url + "/logout";
     public static final String url_signup = url + "/signup";
     public static final String url_profile = url + "/profile";
+
     public static final String url_getDownloadEnd = url + "/getDownloadEnd";
     public static final String url_getDownload = url + "/getDownload";
     public static final String url_getDownloadProfile = url + "/getDownloadProfile";
     public static final String url_addDownload = url + "/addDownload";
     public static final String url_completeDownload = url + "/completeDownload";
 
-    public static final String url_getCarEnd = url + "/getDownloadEnd";
-    public static final String url_getCar = url + "/getDownload";
-    public static final String url_getCarProfile = url + "/getDownloadProfile";
-    public static final String url_addCar = url + "/addDownload";
-    public static final String url_completeCar = url + "/completeDownload";
+    public static final String url_getCarEnd = url + "/getCarEnd";
+    public static final String url_getCar = url + "/getCar";
+    public static final String url_getCarProfile = url + "/getCarProfile";
+    public static final String url_addCar = url + "/addCar";
+    public static final String url_completeCar = url + "/completeCar";
+
+    public static final String url_getEventEnd = url + "/getEventEnd";
+    public static final String url_getEvent = url + "/getEvent";
+    public static final String url_getEventProfile = url + "/getEventProfile";
+    public static final String url_addEvent = url + "/addEvent";
+    public static final String url_completeEvent = url + "/completeEvent";
+
+    public static final String url_getPaper = url + "/getPaper";
+    public static final String url_getPaperProfile = url + "/getPaperProfile";
 
     public static final String url_changeStatus = url + "/changeStatus";
-    public static final String url_checkVote = url + "/checkVote";
+    public static final String url_controlVote = url + "/controlVote";
+    public static final String url_vote = url + "/vote";
     public static final String url_boxList = url + "/boxList";
     public static final String url_boxUsersList = url + "/boxUsersList";
     public static final String url_checkDemand = url + "/checkDemand";
@@ -84,6 +95,9 @@ public class Controllers {
     public static final String tag_goingComing = "goingComing";
     public static final String tag_highway = "highway";
     public static final String tag_place = "place";
+    public static final String tag_latitude = "latitude";
+    public static final String tag_longitude = "longitude";
+    public static final String tag_index = "index";
 
     public static final String io_count = "countNotify";
 

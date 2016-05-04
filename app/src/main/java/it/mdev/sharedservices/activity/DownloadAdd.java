@@ -111,7 +111,6 @@ public class DownloadAdd extends Fragment {
                 e.printStackTrace();
             }
         } else {
-            Add_btn.setEnabled(false);
             Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         cityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,CitysList);
@@ -147,6 +146,7 @@ public class DownloadAdd extends Fragment {
     private void addForm() {
         if (!validateName()) { return; }
         if (!validateSize()) { return; }
+        if (!validateCity()) { return; }
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         if (isPicture) {
@@ -177,6 +177,14 @@ public class DownloadAdd extends Fragment {
             }
         } else {
             Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean validateCity() {
+        if(City_sp.getSelectedItem() != null) {
+            return true;
+        } else {
+            return false;
         }
     }
 

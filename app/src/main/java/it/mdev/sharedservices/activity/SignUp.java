@@ -64,7 +64,8 @@ public class SignUp extends Fragment {
     private SwitchCompat Driver_swt;
     private Button Login_btn, SignUp_btn;
 
-    private Boolean driver;
+    private boolean driver;
+    private boolean isPicture = false;
     private int year, month, day;
     private static final int SELECT_PICTURE = 1;
     private ArrayList<String> CountrysList, CitysList;
@@ -145,7 +146,8 @@ public class SignUp extends Fragment {
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DateN_txt.setText(new StringBuilder().append(1990).append("/").append(month + 1).append("/").append(day));
+        year = 1990;
+        DateN_txt.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
         DateN_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,8 +197,10 @@ public class SignUp extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     driver = true;
+                    Driver_swt.setText(R.string.driverOn);
                 } else {
                     driver = false;
+                    Driver_swt.setText(R.string.driverOff);
                 }
             }
         });
@@ -236,7 +240,11 @@ public class SignUp extends Fragment {
         String key = algo.key(x);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(conf.tag_key, x + ""));
-        params.add(new BasicNameValuePair(conf.tag_picture, getStringPicture()));
+        if (isPicture) {
+            params.add(new BasicNameValuePair(conf.tag_picture, getStringPicture()));
+        } else {
+            params.add(new BasicNameValuePair(conf.tag_picture, ""));
+        }
         params.add(new BasicNameValuePair(conf.tag_fname, algo.dec2enc(Fname_etxt.getText().toString(), key)));
         params.add(new BasicNameValuePair(conf.tag_lname, algo.dec2enc(Lname_etxt.getText().toString(), key)));
         params.add(new BasicNameValuePair(conf.tag_gender, algo.dec2enc(Gender_sp.getSelectedItem().toString(), key)));
@@ -369,6 +377,7 @@ public class SignUp extends Fragment {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
                 Picture_iv.setImageURI(selectedImageUri);
+                isPicture = true;
             }
         }
     }

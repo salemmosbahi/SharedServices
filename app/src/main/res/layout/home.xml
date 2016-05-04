@@ -8,24 +8,24 @@
     <Button
         style="@style/DashButton"
         android:id="@+id/Car_btn"
-        android:drawableTop="@mipmap/ic_launcher"
+        android:drawableTop="@drawable/car"
         android:text="@string/car" />
 
     <Button
         style="@style/DashButton"
         android:id="@+id/Download_btn"
-        android:drawableTop="@mipmap/ic_launcher"
+        android:drawableTop="@drawable/download"
         android:text="@string/download" />
 
     <Button
         style="@style/DashButton"
         android:id="@+id/Event_btn"
-        android:drawableTop="@mipmap/ic_launcher"
+        android:drawableTop="@drawable/event"
         android:text="@string/event" />
 
     <Button
         style="@style/DashButton"
         android:id="@+id/Paper_btn"
-        android:drawableTop="@mipmap/ic_launcher"
+        android:drawableTop="@drawable/paper"
         android:text="@string/paper" />
 </it.mdev.sharedservices.design.DashboardLayout>

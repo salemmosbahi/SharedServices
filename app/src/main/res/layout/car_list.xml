@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/Row_rl"
-    android:padding="10dp" >
+    android:id="@+id/RowCAL_rl"
+    android:padding="5dp" >
 
     <TextView
-        android:id="@+id/Model_txt"
-        android:layout_width="fill_parent"
+        android:id="@+id/ModelCAL_txt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:layout_alignParentLeft="true"
         android:textSize="15sp"
         android:textColor="@color/black" />
 
-    <TextView
-        android:id="@+id/Route_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Name_txt"
-        android:layout_marginTop="2dip"
-        android:layout_alignParentLeft="true"
-        android:textColor="@color/red"
-        android:textSize="13sp" />
-
-    <TextView
-        android:id="@+id/Date_txt"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/Route_txt"
-        android:layout_marginTop="2dip"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:layout_below="@id/ModelCAL_txt"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/RouteCAL_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/DateCAL_txt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+    </LinearLayout>
 </RelativeLayout>

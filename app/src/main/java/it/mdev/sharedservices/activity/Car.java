@@ -37,9 +37,9 @@ public class Car extends Fragment implements SwipeRefreshLayout.OnRefreshListene
     Controllers conf = new Controllers();
     ServerRequest sr = new ServerRequest();
 
-    private SwipeRefreshLayout Refresh_swipe;
-    private ListView lv;
-    private FloatingActionButton Add_btn, Search_btn;
+    private SwipeRefreshLayout CarRefresh_swipe;
+    private ListView lvCar;
+    private FloatingActionButton AddCar_btn, SearchCar_btn;
     ArrayList<CarDB> CarDBList;
     JSONArray dataJsonArray = null;
 
@@ -50,21 +50,21 @@ public class Car extends Fragment implements SwipeRefreshLayout.OnRefreshListene
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.settings, container, false);
+        View v = inflater.inflate(R.layout.car, container, false);
         ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.car));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
-        Refresh_swipe = (SwipeRefreshLayout) v.findViewById(R.id.Refresh_swipe);
-        lv = (ListView) v.findViewById(R.id.CarList);
-        Refresh_swipe.setOnRefreshListener(this);
-        Refresh_swipe.post(new Runnable() {
+        CarRefresh_swipe = (SwipeRefreshLayout) v.findViewById(R.id.CarRefresh_swipe);
+        lvCar = (ListView) v.findViewById(R.id.CarList);
+        CarRefresh_swipe.setOnRefreshListener(this);
+        CarRefresh_swipe.post(new Runnable() {
             public void run() {
                 getCarEnd();
             }
         });
 
-        Add_btn = (FloatingActionButton) v.findViewById(R.id.Add_btn);
-        Add_btn.setOnClickListener(new View.OnClickListener() {
+        AddCar_btn = (FloatingActionButton) v.findViewById(R.id.AddCar_btn);
+        AddCar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -74,8 +74,8 @@ public class Car extends Fragment implements SwipeRefreshLayout.OnRefreshListene
             }
         });
 
-        Search_btn = (FloatingActionButton) v.findViewById(R.id.Search_btn);
-        Search_btn.setOnClickListener(new View.OnClickListener() {
+        SearchCar_btn = (FloatingActionButton) v.findViewById(R.id.SearchCar_btn);
+        SearchCar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -89,11 +89,11 @@ public class Car extends Fragment implements SwipeRefreshLayout.OnRefreshListene
     }
 
     private void getCarEnd() {
-        Refresh_swipe.setRefreshing(true);
+        CarRefresh_swipe.setRefreshing(true);
         if(conf.NetworkIsAvailable(getActivity())){
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair(conf.tag_country, pref.getString(conf.tag_country, "")));
-            params.add(new BasicNameValuePair(conf.tag_city, pref.getString(conf.tag_city, "")));
+            params.add(new BasicNameValuePair(conf.tag_depart, pref.getString(conf.tag_city, "")));
             CarDBList = new ArrayList<>();
             JSONObject json = sr.getJson(conf.url_getCarEnd, params);
             if (json != null) {
@@ -115,11 +115,11 @@ public class Car extends Fragment implements SwipeRefreshLayout.OnRefreshListene
                     e.printStackTrace();
                 }
                 CarAdapterList adapter = new CarAdapterList(getActivity(), CarDBList, Car.this);
-                lv.setAdapter(adapter);
+                lvCar.setAdapter(adapter);
             }
-            Refresh_swipe.setRefreshing(false);
+            CarRefresh_swipe.setRefreshing(false);
         }else{
-            Refresh_swipe.setRefreshing(false);
+            CarRefresh_swipe.setRefreshing(false);
             Toast.makeText(getActivity(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
         }
     }

@@ -52,7 +52,7 @@ public class BoxUsers extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.box, container, false);
-        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.box));
+        ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.boxUser));
         pref = getActivity().getSharedPreferences(conf.app, Context.MODE_PRIVATE);
 
         idService = getArguments().getString(conf.tag_idService);

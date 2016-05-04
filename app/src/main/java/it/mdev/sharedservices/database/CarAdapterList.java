@@ -52,20 +52,20 @@ public class CarAdapterList extends BaseAdapter {
         if (v == null) {
             inflater = (LayoutInflater) contxt.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.car_list, null);
-            holder.Model_txt = (TextView) v.findViewById(R.id.Model_txt);
-            holder.Route_txt = (TextView) v.findViewById(R.id.Route_txt);
-            holder.Date_txt = (TextView) v.findViewById(R.id.Date_txt);
-            holder.Row_relative = (RelativeLayout) v.findViewById(R.id.Row_rl);
+            holder.ModelCAL_txt = (TextView) v.findViewById(R.id.ModelCAL_txt);
+            holder.RouteCAL_txt = (TextView) v.findViewById(R.id.RouteCAL_txt);
+            holder.DateCAL_txt = (TextView) v.findViewById(R.id.DateCAL_txt);
+            holder.RowCAL_relative = (RelativeLayout) v.findViewById(R.id.RowCAL_rl);
             v.setTag(holder);
         } else {
             holder = (CarHolder) v.getTag();
         }
 
-        holder.Model_txt.setText(data.get(position).getModel());
-        holder.Route_txt.setText(data.get(position).getDepart() + " -> " + data.get(position).getDestination());
-        holder.Date_txt.setText(data.get(position).getDate());
+        holder.ModelCAL_txt.setText(data.get(position).getModel());
+        holder.RouteCAL_txt.setText(data.get(position).getDepart() + " -> " + data.get(position).getDestination());
+        holder.DateCAL_txt.setText(data.get(position).getDate());
 
-        holder.Row_relative.setOnClickListener(new View.OnClickListener() {
+        holder.RowCAL_relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View x) {
                 Fragment fr = new CarProfile();
@@ -87,7 +87,7 @@ public class CarAdapterList extends BaseAdapter {
     }
 
     class CarHolder {
-        TextView Model_txt, Route_txt, Date_txt;
-        RelativeLayout Row_relative;
+        TextView ModelCAL_txt, RouteCAL_txt, DateCAL_txt;
+        RelativeLayout RowCAL_relative;
     }
 }

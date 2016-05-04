@@ -22,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.Socket;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -35,6 +37,7 @@ import it.mdev.sharedservices.R;
 import it.mdev.sharedservices.util.Controllers;
 import it.mdev.sharedservices.util.Encryption;
 import it.mdev.sharedservices.util.ServerRequest;
+import it.mdev.sharedservices.util.SocketIO;
 
 /**
  * Created by salem on 4/4/16.
@@ -43,6 +46,7 @@ public class Login extends Fragment {
     SharedPreferences pref;
     ServerRequest sr = new ServerRequest();
     Controllers conf = new Controllers();
+    Socket socket = SocketIO.getInstance();
 
     private EditText Email_etxt, Password_etxt;
     private TextInputLayout Email_input, Password_input;
@@ -96,6 +100,7 @@ public class Login extends Fragment {
     private void submitForm() {
         if (!validateEmail()) { return; }
         if (!validatePassword()) { return; }
+        socket.connect();
 
         Encryption algo = new Encryption();
         int x = algo.keyVirtual();
@@ -136,6 +141,14 @@ public class Login extends Fragment {
                     byte[] imageAsBytes = Base64.decode(picture.getBytes(), Base64.DEFAULT);
                     im.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
                     rl.addView(vi);
+
+                    JSONObject jx = new JSONObject();
+                    try {
+                        jx.put(conf.tag_type, "nottoken");
+                        jx.put(conf.tag_tokenMain, token);
+                        jx.put(conf.tag_token, token);
+                        socket.emit(conf.io_count, jx);
+                    } catch (JSONException e) { }
 
                     goFragment(new Home());
                 }else{

@@ -123,7 +123,6 @@ public class DownloadSearch extends Fragment {
                 e.printStackTrace();
             }
         } else {
-            Search_btn.setEnabled(false);
             Toast.makeText(getActivity(), R.string.serverunvalid,Toast.LENGTH_LONG).show();
         }
         cityAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,CitysList);

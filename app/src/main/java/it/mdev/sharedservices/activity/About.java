@@ -24,7 +24,7 @@ public class About extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.settings, container, false);
+        View rootView = inflater.inflate(R.layout.about, container, false);
         ((Main) getActivity()).getSupportActionBar().setTitle(getString(R.string.about));
 
         return rootView;

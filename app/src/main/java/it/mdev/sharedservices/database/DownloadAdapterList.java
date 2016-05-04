@@ -57,33 +57,33 @@ public class DownloadAdapterList extends BaseAdapter {
         if (v == null) {
             inflater = (LayoutInflater) contxt.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.download_list, null);
-            holder.Picture_iv = (ImageView) v.findViewById(R.id.Picture_iv);
-            holder.Name_txt = (TextView) v.findViewById(R.id.Name_txt);
-            holder.Status_txt = (TextView) v.findViewById(R.id.Status_txt);
-            holder.Size_txt = (TextView) v.findViewById(R.id.Size_txt);
-            holder.Date_txt = (TextView) v.findViewById(R.id.Date_txt);
-            holder.Row_relative = (RelativeLayout) v.findViewById(R.id.Row_rl);
+            holder.PictureDAL_iv = (ImageView) v.findViewById(R.id.PictureDAL_iv);
+            holder.NameDAL_txt = (TextView) v.findViewById(R.id.NameDAL_txt);
+            holder.StatusDAL_txt = (TextView) v.findViewById(R.id.StatusDAL_txt);
+            holder.SizeDAL_txt = (TextView) v.findViewById(R.id.SizeDAL_txt);
+            holder.DateDAL_txt = (TextView) v.findViewById(R.id.DateDAL_txt);
+            holder.RowDAL_relative = (RelativeLayout) v.findViewById(R.id.RowDAL_rl);
             v.setTag(holder);
         } else {
             holder = (DownloadHolder) v.getTag();
         }
 
         if (data.get(position).getPicture().equals("")) {
-            holder.Picture_iv.setImageResource(R.drawable.ic_profile_r);
+            holder.PictureDAL_iv.setImageResource(R.drawable.download);
         } else {
             byte[] imageAsBytes = Base64.decode(data.get(position).getPicture().getBytes(), Base64.DEFAULT);
-            holder.Picture_iv.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+            holder.PictureDAL_iv.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
         }
-        holder.Name_txt.setText(data.get(position).getName());
+        holder.NameDAL_txt.setText(data.get(position).getName());
         if (data.get(position).getStatus().equals("complete")) {
-            holder.Status_txt.setText(R.string.download_complete);
+            holder.StatusDAL_txt.setText(R.string.download_complete);
         } else if (data.get(position).getStatus().equals("pending")) {
-            holder.Status_txt.setText(R.string.download_pending);
+            holder.StatusDAL_txt.setText(R.string.download_pending);
         }
-        holder.Size_txt.setText(data.get(position).getSize() + " Go");
-        holder.Date_txt.setText(data.get(position).getDate());
+        holder.SizeDAL_txt.setText(data.get(position).getSize() + " Go");
+        holder.DateDAL_txt.setText(data.get(position).getDate());
 
-        holder.Row_relative.setOnClickListener(new View.OnClickListener() {
+        holder.RowDAL_relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View x) {
                 Fragment fr = new DownloadProfile();
@@ -105,8 +105,8 @@ public class DownloadAdapterList extends BaseAdapter {
     }
 
     class DownloadHolder {
-        ImageView Picture_iv;
-        TextView Name_txt, Status_txt, Size_txt, Date_txt;
-        RelativeLayout Row_relative;
+        ImageView PictureDAL_iv;
+        TextView NameDAL_txt, StatusDAL_txt, SizeDAL_txt, DateDAL_txt;
+        RelativeLayout RowDAL_relative;
     }
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,26 +59,36 @@ public class BoxNotifyAdapterList extends BaseAdapter {
         if (v == null) {
             inflater = (LayoutInflater) contxt.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.box_notify_list, null);
-            holder.Name_txt = (TextView) v.findViewById(R.id.Name_txt);
-            holder.Username_txt = (TextView) v.findViewById(R.id.Username_txt);
-            holder.Service_txt = (TextView) v.findViewById(R.id.Service_txt);
-            holder.Row_relative = (RelativeLayout) v.findViewById(R.id.BoxNotify_rl);
+            holder.PictureBN_iv = (ImageView) v.findViewById(R.id.PictureBN_iv);
+            holder.NameBN_txt = (TextView) v.findViewById(R.id.NameBN_txt);
+            holder.UsernameBN_txt = (TextView) v.findViewById(R.id.UsernameBN_txt);
+            holder.ServiceBN_txt = (TextView) v.findViewById(R.id.ServiceBN_txt);
+            holder.RowBN_relative = (RelativeLayout) v.findViewById(R.id.BoxNotify_rl);
             v.setTag(holder);
         } else {
             holder = (BoxNotifyHolder) v.getTag();
         }
-        holder.Name_txt.setText(data.get(position).getName());
-        if (data.get(position).isMain()) {
-            holder.Username_txt.setText("Me :)");
-        } else {
-            holder.Username_txt.setText(data.get(position).getUsernameMain());
-        }
-        holder.Service_txt.setText(data.get(position).getService());
 
-        holder.Row_relative.setOnClickListener(new View.OnClickListener() {
+        if (data.get(position).getService().equals(contxt.getString(R.string.car))) {
+            holder.PictureBN_iv.setBackgroundResource(R.drawable.car);
+        } else if (data.get(position).getService().equals(contxt.getString(R.string.download))) {
+            holder.PictureBN_iv.setBackgroundResource(R.drawable.download);
+        } else if (data.get(position).getService().equals(contxt.getString(R.string.event))) {
+            holder.PictureBN_iv.setBackgroundResource(R.drawable.event);
+        } else if (data.get(position).getService().equals(contxt.getString(R.string.paper))) {
+            holder.PictureBN_iv.setBackgroundResource(R.drawable.paper);
+        }
+        holder.NameBN_txt.setText(data.get(position).getName());
+        if (data.get(position).isMain()) {
+            holder.UsernameBN_txt.setText("Me :)");
+        } else {
+            holder.UsernameBN_txt.setText(data.get(position).getUsernameMain());
+        }
+        holder.ServiceBN_txt.setText(data.get(position).getService());
+
+        holder.RowBN_relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View x) {
-                //Toast.makeText(contxt, "xx " + data.get(position).isMain() + " "+ R.string.download + " " + data.get(position).getService(), Toast.LENGTH_SHORT).show();
                 if (data.get(position).isMain()) {
                     Fragment fr = new BoxUsers();
                     FragmentTransaction ft = fragment.getFragmentManager().beginTransaction();
@@ -120,7 +131,8 @@ public class BoxNotifyAdapterList extends BaseAdapter {
     }
 
     class BoxNotifyHolder {
-        TextView Name_txt, Username_txt, Service_txt;
-        RelativeLayout Row_relative;
+        ImageView PictureBN_iv;
+        TextView NameBN_txt, UsernameBN_txt, ServiceBN_txt;
+        RelativeLayout RowBN_relative;
     }
 }

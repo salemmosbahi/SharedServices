@@ -2,29 +2,28 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:gravity="center">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:gravity="center">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/Model_input"
+                android:id="@+id/ModelCA_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
-                    android:id="@+id/Model_etxt"
+                    android:id="@+id/ModelCA_etxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences|textCapWords"
@@ -32,11 +31,11 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/Description_input"
+                android:id="@+id/DescriptionCA_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
-                    android:id="@+id/Description_etxt"
+                    android:id="@+id/DescriptionCA_etxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textImeMultiLine"
@@ -59,12 +58,12 @@
                     android:hint="@string/from"/>
 
                 <android.support.v7.widget.Toolbar
-                    android:id="@+id/CityDepart_input"
+                    android:id="@+id/CityDepartCA_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_scrollFlags="scroll|enterAlways">
                     <Spinner
-                        android:id="@+id/CityDepart_sp"
+                        android:id="@+id/CityDepartCA_sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"/>
@@ -87,12 +86,12 @@
                     android:hint="@string/to"/>
 
                 <android.support.v7.widget.Toolbar
-                    android:id="@+id/CityDestination_input"
+                    android:id="@+id/CityDestinationCA_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_scrollFlags="scroll|enterAlways">
                     <Spinner
-                        android:id="@+id/CityDestination_sp"
+                        android:id="@+id/CityDestinationCA_sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"/>
@@ -103,56 +102,62 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/Date_txt"
+                    android:id="@+id/DateCA_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18dp"
                     android:singleLine="true"
-                    android:padding="5dp"
+                    android:layout_margin="5dp"
                     android:gravity="center"
                     android:hint="@string/hint_date"/>
 
                 <TextView
-                    android:id="@+id/Time_txt"
+                    android:id="@+id/TimeCA_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18dp"
                     android:singleLine="true"
-                    android:padding="5dp"
+                    android:layout_margin="5dp"
                     android:gravity="center"
                     android:hint="@string/hint_time"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/PositionCA_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:src="@android:drawable/ic_dialog_map" />
             </LinearLayout>
 
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/GoingComing_swt"
+                android:id="@+id/GoingComingCA_swt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:textSize="18dp"
                 android:textColor="@color/red"
                 android:text="@string/going"/>
 
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/Highway_swt"
+                android:id="@+id/HighwayCA_swt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:textSize="18dp"
                 android:textColor="@color/red"
                 android:text="@string/highway_not"/>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/Place_input"
+                android:id="@+id/PlaceCA_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
-                    android:id="@+id/Place_etxt"
+                    android:id="@+id/PlaceCA_etxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -160,11 +165,11 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/Add_btn"
+                android:id="@+id/AddCA_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="20dip"
+                android:layout_margin="20dp"
                 android:text="@string/add"
                 android:textAllCaps="false"
                 android:background="@color/red"
@@ -172,10 +177,10 @@
                 android:textSize="18sp"/>
 
             <Button
-                android:id="@+id/Empty_btn"
+                android:id="@+id/EmptyCA_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
+                android:layout_marginTop="10dp"
                 android:background="@null"
                 android:text="@string/empty_fields_link"
                 android:textAllCaps="false"

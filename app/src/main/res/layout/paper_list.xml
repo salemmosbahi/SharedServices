@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/RowPAL_rl"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/NamePAL_txt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="15sp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/PlacePAL_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/NamePAL_txt"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/red"
+        android:textSize="13sp" />
+</RelativeLayout>

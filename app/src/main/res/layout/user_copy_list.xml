@@ -2,25 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/Row_rl"
-    android:padding="10dp" >
+    android:id="@+id/RowUCAL_rl"
+    android:padding="5dp" >
 
     <TextView
-        android:id="@+id/Userame_txt"
+        android:id="@+id/UserameUCAL_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="8dp"
         android:textSize="20sp"
         android:textColor="@color/black" />
 
     <TextView
-        android:id="@+id/Age_txt"
+        android:id="@+id/AgeUCAL_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/Userame_txt"
-        android:layout_marginTop="2dip"
+        android:layout_below="@id/UserameUCAL_txt"
         android:textSize="16sp"
         android:textColor="@color/red" />
 </RelativeLayout>

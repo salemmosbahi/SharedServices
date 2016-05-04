@@ -2,101 +2,138 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/CityDepart_input"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways">
-            <Spinner
-                android:id="@+id/CityDepart_sp"
-                android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="20dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"/>
-        </android.support.v7.widget.Toolbar>
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/CityDestination_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways">
-            <Spinner
-                android:id="@+id/CityDestination_sp"
-                android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:singleLine="true"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:hint="@string/from"/>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/CityDepartCS_input"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll|enterAlways">
+                    <Spinner
+                        android:id="@+id/CityDepartCS_sp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"/>
+                </android.support.v7.widget.Toolbar>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"/>
-        </android.support.v7.widget.Toolbar>
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/Date_txt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textSize="18dp"
-            android:gravity="center"
-            android:hint="@string/hint_date"/>
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:singleLine="true"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:hint="@string/to"/>
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/Car_swt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:textSize="18dp"
-            android:textColor="@color/red"
-            android:text="@string/download_pending"
-            android:textOff="@string/download_pending"
-            android:textOn="@string/download_complete"
-            app:showText="false"/>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/CityDestinationCS_input"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll|enterAlways">
+                    <Spinner
+                        android:id="@+id/CityDestinationCS_sp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"/>
+                </android.support.v7.widget.Toolbar>
+            </LinearLayout>
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/GoingComing_swt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:textSize="18dp"
-            android:textColor="@color/red"
-            android:text="@string/download_pending"
-            android:textOff="@string/download_pending"
-            android:textOn="@string/download_complete"
-            app:showText="false"/>
+            <TextView
+                android:id="@+id/DateCS_txt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:hint="@string/hint_date"/>
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/Highway_swt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:textSize="18dp"
-            android:textColor="@color/red"
-            android:text="@string/download_pending"
-            android:textOff="@string/download_pending"
-            android:textOn="@string/download_complete"
-            app:showText="false"/>
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/CarCS_swt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:textSize="18dp"
+                android:textColor="@color/red"
+                android:text="@string/car_pending"
+                android:textOff="@string/car_pending"
+                android:textOn="@string/car_complete"
+                app:showText="false"/>
 
-        <Button
-            android:id="@+id/Search_btn"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/red"
-            android:text="@string/search"
-            android:textColor="@color/white" />
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/GoingComingCS_swt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:textSize="18dp"
+                android:textColor="@color/red"
+                android:text="@string/going"
+                android:textOff="@string/going"
+                android:textOn="@string/going_coming"
+                app:showText="false"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/HighwayCS_swt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:textSize="18dp"
+                android:textColor="@color/red"
+                android:text="@string/highway_not"
+                android:textOff="@string/highway_not"
+                android:textOn="@string/highway"
+                app:showText="false"/>
+
+            <Button
+                android:id="@+id/SearchCS_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:layout_marginTop="5dp"
+                android:text="@string/search"
+                android:textColor="@color/white" />
+
+            <ListView
+                android:id="@+id/CarCS_lv"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/Car_lv"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
 </ScrollView>

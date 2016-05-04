@@ -2,6 +2,7 @@ package it.mdev.sharedservices;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import it.mdev.sharedservices.activity.BoxNotify;
 import it.mdev.sharedservices.activity.Car;
@@ -63,10 +66,6 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        /*if (getIntent().getBooleanExtra("EXIT", false)) {
-            finish();
-        }*/
 
         pref = getSharedPreferences(conf.app, Context.MODE_PRIVATE);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -114,7 +113,13 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
                         tokenMain = data.getString(conf.tag_tokenMain);
                         token = data.getString(conf.tag_token);
                         if (type.equals("token")) {
-                            if (tokenMain.equals(pref.getString(conf.tag_token, "")) || token.equals(pref.getString(conf.tag_token, ""))) {
+                            if (tokenMain.equals(pref.getString(conf.tag_token, ""))) {
+                                if (conf.NetworkIsAvailable(getApplication())) {
+                                    getCount(pref.getString(conf.tag_token, ""));
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
+                                }
+                            } else if (token.equals(pref.getString(conf.tag_token, ""))) {
                                 if (conf.NetworkIsAvailable(getApplication())) {
                                     getCount(pref.getString(conf.tag_token, ""));
                                 } else {
@@ -161,8 +166,7 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_notify);
-        menuItem.setIcon(counterDrawable(count, R.drawable.ic_notify));
-
+        menuItem.setIcon(counterDrawable(count, R.drawable.notify));
         return true;
     }
 
@@ -175,13 +179,12 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
             View counterTextPanel = view.findViewById(R.id.counterPanel);
             counterTextPanel.setVisibility(View.GONE);
         } else {
+            view.setBackgroundResource(backgroundImageId);
             TextView textView = (TextView) view.findViewById(R.id.count_txt);
             textView.setText("" + count);
         }
 
-        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.setDrawingCacheEnabled(true);
         view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
