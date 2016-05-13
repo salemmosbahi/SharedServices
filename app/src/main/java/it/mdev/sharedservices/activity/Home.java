@@ -24,7 +24,6 @@ import it.mdev.sharedservices.util.SocketIO;
 public class Home extends Fragment {
     SharedPreferences pref;
     Controllers conf = new Controllers();
-    //Socket socket = SocketIO.getInstance();
 
     private Button Car_btn, Download_btn, Paper_btn, Event_btn;
 
@@ -32,6 +31,7 @@ public class Home extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,5 +102,20 @@ public class Home extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

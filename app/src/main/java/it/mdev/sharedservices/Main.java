@@ -2,6 +2,7 @@ package it.mdev.sharedservices;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -63,7 +64,12 @@ public class Main extends AppCompatActivity implements FragmentDrawer.FragmentDr
     private int count = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 

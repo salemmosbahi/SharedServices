@@ -74,6 +74,7 @@ public class Profile extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -195,6 +196,7 @@ public class Profile extends Fragment {
             Point_rb.setVisibility(View.VISIBLE);
             getProfile();
         }else{
+            Logout_btn.setVisibility(View.GONE);
             Toast.makeText(getActivity(), R.string.networkunvalid, Toast.LENGTH_SHORT).show();
         }
 
@@ -470,5 +472,20 @@ public class Profile extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

@@ -49,6 +49,7 @@ public class Paper extends Fragment implements SwipeRefreshLayout.OnRefreshListe
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +62,12 @@ public class Paper extends Fragment implements SwipeRefreshLayout.OnRefreshListe
         PaperRefresh_swipe.setOnRefreshListener(this);
         PaperRefresh_swipe.post(new Runnable() {
             public void run() {
-                getPaper();
+                if (pref.getString(conf.tag_country, "").equals("Tunisia")) {
+                    getPaper();
+                } else {
+                    Toast.makeText(getActivity(), "This service is dedicated to the Tunisian people", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -121,5 +127,20 @@ public class Paper extends Fragment implements SwipeRefreshLayout.OnRefreshListe
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

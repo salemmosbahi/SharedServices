@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Shared Services</string>
-    <string name="app_version">Version 1.0</string>
+    <string name="app_version">Version 1.3.0</string>
     <string name="app_copy">© 2016 Shared Services</string>
 
     <string name="settings">Settings</string>

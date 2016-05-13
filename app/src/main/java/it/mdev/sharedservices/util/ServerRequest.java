@@ -10,6 +10,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,6 +36,9 @@ public class ServerRequest {
     public JSONObject getJsonFromUrl(String url, List<NameValuePair> params) {
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
+            final HttpParams httpParameters = httpClient.getParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, 2000);
+            HttpConnectionParams.setSoTimeout(httpParameters, 4000);
             HttpPost httpPost = new HttpPost(url);
             httpPost.setEntity(new UrlEncodedFormEntity(params));
             HttpResponse httpResponse = httpClient.execute(httpPost);

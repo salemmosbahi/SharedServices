@@ -56,6 +56,7 @@ public class PositionMAP extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -79,9 +80,6 @@ public class PositionMAP extends Fragment {
         if(canGetLocation()){
             latitude = getLatitude();
             longitude = getLongitude();
-        }else{
-            //latitude = 0;
-            //longitude = 0;
         }
         MarkerOptions x = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Hello in Shared Services Maps");
         x.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -223,5 +221,11 @@ public class PositionMAP extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        mMapView.onSaveInstanceState(savedInstanceState);
     }
 }
